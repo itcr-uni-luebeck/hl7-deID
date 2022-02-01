@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.batch
+package de.uzl.itcr.highmed.ucic.hl7deid.batch
 
 import de.uzl.itcr.highmed.ucic.hl7analysis.messageindex.Hl7MessageIndexer
 import org.slf4j.Logger

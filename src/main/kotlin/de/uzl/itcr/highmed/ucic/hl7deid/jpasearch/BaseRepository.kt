@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.jpasearch
+package de.uzl.itcr.highmed.ucic.hl7deid.jpasearch
 
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext

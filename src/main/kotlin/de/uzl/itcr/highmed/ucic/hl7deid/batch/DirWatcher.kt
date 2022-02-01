@@ -1,12 +1,10 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.batch
+package de.uzl.itcr.highmed.ucic.hl7deid.batch
 
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.JobParameters
 import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import java.io.File

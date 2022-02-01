@@ -1,23 +1,21 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis
+package de.uzl.itcr.highmed.ucic.hl7deid
 
 import ca.uhn.hl7v2.DefaultHapiContext
 import ca.uhn.hl7v2.HapiContext
-import ca.uhn.hl7v2.model.v25.message.ADT_AXX
-import ca.uhn.hl7v2.parser.CanonicalModelClassFactory
-import ca.uhn.hl7v2.parser.ParserConfiguration
 import ca.uhn.hl7v2.validation.impl.ValidationContextFactory
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientPseudonymRepo
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.NameList
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymisationRulesSettings
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymizationRules
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientIdentityRepo
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.services.PatientIdentityService
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PatientIdentityService
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing
 import org.springframework.batch.core.launch.support.SimpleJobLauncher
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.core.task.SimpleAsyncTaskExecutor
@@ -26,6 +24,7 @@ import java.security.SecureRandom
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableBatchProcessing
+@EnableConfigurationProperties
 class Hl7AnalysisApplication(
     @Autowired val pseudonymisationRulesSettings: PseudonymisationRulesSettings,
     @Autowired val jobRepository: JobRepository

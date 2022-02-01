@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo
+package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo
 
 import org.hibernate.Hibernate
 import org.springframework.data.repository.CrudRepository

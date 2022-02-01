@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.services
+package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services
 
 import ca.uhn.hl7v2.DefaultHapiContext
 import ca.uhn.hl7v2.HL7Exception
@@ -15,6 +15,9 @@ import de.uzl.itcr.highmed.ucic.hl7analysis.messageindex.Hl7MessageIndexer
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymizationRules
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientIdentity
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientPseudonym
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.MessageIdService
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PatientIdentityService
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PseudonymIdService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -214,7 +217,7 @@ class Hl7PseudoymizationService(
         try {
             hl7MessageIndexer.indexHl7MessageString(stringMessage, filename)
         } catch (e: HL7Exception) {
-            de.uzl.itcr.highmed.ucic.hl7analysis.log.warn(e.message)
+            de.uzl.itcr.highmed.ucic.hl7deid.log.warn(e.message)
         }
         val parsedMessage = hapiContext.pipeParser.parse(cleanMessageString)
         return processMessage(parsedMessage)

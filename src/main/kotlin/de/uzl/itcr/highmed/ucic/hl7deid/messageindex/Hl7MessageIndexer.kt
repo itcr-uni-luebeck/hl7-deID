@@ -1,15 +1,14 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.messageindex
+package de.uzl.itcr.highmed.ucic.hl7deid.messageindex
 
 import ca.uhn.hl7v2.HL7Exception
 import ca.uhn.hl7v2.HapiContext
-import ca.uhn.hl7v2.conf.spec.message.Seg
 import ca.uhn.hl7v2.model.Message
 import ca.uhn.hl7v2.model.Segment
 import ca.uhn.hl7v2.model.v25.segment.MSH
 import ca.uhn.hl7v2.model.v25.segment.PID
 import ca.uhn.hl7v2.model.v25.segment.PV1
 import ca.uhn.hl7v2.util.Terser
-import de.uzl.itcr.highmed.ucic.hl7analysis.log
+import de.uzl.itcr.highmed.ucic.hl7deid.log
 import org.springframework.stereotype.Service
 import java.io.File
 

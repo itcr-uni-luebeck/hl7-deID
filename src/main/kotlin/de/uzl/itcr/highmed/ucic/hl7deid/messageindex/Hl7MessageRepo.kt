@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.messageindex
+package de.uzl.itcr.highmed.ucic.hl7deid.messageindex
 
 import de.uzl.itcr.highmed.ucic.hl7analysis.jpasearch.BaseRepository
 import org.springframework.beans.factory.annotation.Autowired

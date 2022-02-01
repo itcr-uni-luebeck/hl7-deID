@@ -1,18 +1,14 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.terser
+package de.uzl.itcr.highmed.ucic.hl7deid.terser
 
-import ca.uhn.hl7v2.HL7Exception
 import ca.uhn.hl7v2.HapiContext
 import ca.uhn.hl7v2.util.Terser
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.actuate.endpoint.invoke.MissingParametersException
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.MissingRequestValueException
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller

@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model
+package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper

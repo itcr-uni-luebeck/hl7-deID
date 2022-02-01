@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis
+package de.uzl.itcr.highmed.ucic.hl7deid
 
 import ca.uhn.hl7v2.HapiContext
 import de.uzl.itcr.highmed.ucic.hl7analysis.messageindex.Hl7MessageRepo

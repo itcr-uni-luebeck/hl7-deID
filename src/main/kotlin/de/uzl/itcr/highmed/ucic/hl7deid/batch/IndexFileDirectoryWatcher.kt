@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.batch
+package de.uzl.itcr.highmed.ucic.hl7deid.batch
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

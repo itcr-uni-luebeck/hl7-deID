@@ -1,4 +1,4 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.batch
+package de.uzl.itcr.highmed.ucic.hl7deid.batch
 
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.services.Hl7PseudoymizationService
 import org.slf4j.Logger

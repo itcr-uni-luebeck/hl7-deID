@@ -1,6 +1,5 @@
-package de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.services
+package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymisationRulesSettings
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymizationRules
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PseudonymId
 import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.NumericIdRepo
