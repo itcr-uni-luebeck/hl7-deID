@@ -1,7 +1,7 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.batch
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.batch.DirWatcher
-import de.uzl.itcr.highmed.ucic.hl7analysis.batch.PseudoProcessor
+import de.uzl.itcr.highmed.ucic.hl7deid.batch.DirWatcher
+import de.uzl.itcr.highmed.ucic.hl7deid.batch.PseudoProcessor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.batch.core.Job

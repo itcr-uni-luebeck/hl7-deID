@@ -3,11 +3,11 @@ package de.uzl.itcr.highmed.ucic.hl7deid
 import ca.uhn.hl7v2.DefaultHapiContext
 import ca.uhn.hl7v2.HapiContext
 import ca.uhn.hl7v2.validation.impl.ValidationContextFactory
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientPseudonymRepo
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.NameList
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymisationRulesSettings
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymizationRules
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientIdentityRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientPseudonymRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.NameList
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.PseudonymisationRulesSettings
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.PseudonymizationRules
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientIdentityRepo
 import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PatientIdentityService
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing
 import org.springframework.batch.core.launch.support.SimpleJobLauncher

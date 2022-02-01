@@ -1,10 +1,10 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientPseudonym
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientPseudonymRepo
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.NameList
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientIdentity
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientIdentityRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientPseudonym
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientPseudonymRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.NameList
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientIdentity
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientIdentityRepo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

@@ -11,10 +11,10 @@ import ca.uhn.hl7v2.model.v25.segment.PID
 import ca.uhn.hl7v2.parser.CanonicalModelClassFactory
 import ca.uhn.hl7v2.util.Terser
 import ca.uhn.hl7v2.validation.impl.ValidationContextFactory
-import de.uzl.itcr.highmed.ucic.hl7analysis.messageindex.Hl7MessageIndexer
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymizationRules
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientIdentity
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PatientPseudonym
+import de.uzl.itcr.highmed.ucic.hl7deid.messageindex.Hl7MessageIndexer
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.PseudonymizationRules
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientIdentity
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientPseudonym
 import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.MessageIdService
 import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PatientIdentityService
 import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PseudonymIdService

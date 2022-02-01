@@ -1,6 +1,6 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymizationRules
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.PseudonymizationRules
 import org.hibernate.Hibernate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

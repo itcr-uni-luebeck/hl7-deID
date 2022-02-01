@@ -1,6 +1,6 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.messageindex
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.jpasearch.BaseRepository
+import de.uzl.itcr.highmed.ucic.hl7deid.jpasearch.BaseRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query

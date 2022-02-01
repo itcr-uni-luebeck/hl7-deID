@@ -2,8 +2,8 @@ package de.uzl.itcr.highmed.ucic.hl7deid
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import de.uzl.itcr.highmed.ucic.hl7analysis.messageindex.Hl7MessageRepo
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.MessageIdRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.messageindex.Hl7MessageRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.MessageIdRepo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

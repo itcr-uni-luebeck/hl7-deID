@@ -1,6 +1,6 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.batch
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.services.Hl7PseudoymizationService
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.Hl7PseudoymizationService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.batch.core.JobExecution

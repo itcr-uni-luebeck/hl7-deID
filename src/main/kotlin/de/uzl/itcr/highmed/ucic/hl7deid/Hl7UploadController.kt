@@ -1,8 +1,8 @@
 package de.uzl.itcr.highmed.ucic.hl7deid
 
 import ca.uhn.hl7v2.HapiContext
-import de.uzl.itcr.highmed.ucic.hl7analysis.messageindex.Hl7MessageRepo
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.services.Hl7PseudoymizationService
+import de.uzl.itcr.highmed.ucic.hl7deid.messageindex.Hl7MessageRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.Hl7PseudoymizationService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

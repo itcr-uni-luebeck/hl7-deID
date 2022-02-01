@@ -1,7 +1,7 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.MessageId
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.MessageIdRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.MessageId
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.MessageIdRepo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,8 +1,8 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services
 
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.model.PseudonymizationRules
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.PseudonymId
-import de.uzl.itcr.highmed.ucic.hl7analysis.pseudonym.repo.NumericIdRepo
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.PseudonymizationRules
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PseudonymId
+import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.NumericIdRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.security.SecureRandom
