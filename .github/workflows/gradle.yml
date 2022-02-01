@@ -28,12 +28,12 @@ jobs:
       with:
         arguments: bootJar
     - name: Set ENV tagname
-      run: echo "TAGNAME=ci-${GITHUB_RUN_ID}" | tee -a $GITHUB_ENV
+      run: echo "TAGNAME=ci-${GITHUB_RUN_NUMBER}" | tee -a $GITHUB_ENV
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ env.TAGNAME }}
         generate_release_notes: true
-        prerelease: true
+        #prerelease: true #false to allow linking to /latest
         files: build/libs/hl7-deid.jar
         
