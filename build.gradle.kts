@@ -1,17 +1,17 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.2"
+    id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.20"
-    kotlin("plugin.spring") version "1.5.20"
-    kotlin("kapt") version "1.5.10"
-    kotlin("plugin.allopen") version "1.5.10"
-    kotlin("plugin.jpa") version "1.5.10"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
+    kotlin("plugin.jpa") version "1.6.10"
+    kotlin("kapt") version "1.6.10"
+    kotlin("plugin.allopen") version "1.6.10"
 }
 
 group = "de.uzl.itcr.highmed.ucic"
-java.sourceCompatibility = JavaVersion.VERSION_18
+java.sourceCompatibility = JavaVersion.VERSION_17
 version = "1.0.0"
 
 repositories {

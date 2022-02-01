@@ -51,7 +51,7 @@ data class PseudonymizationRules(
                     FileSystemResource(loc)
                 } ?: throw IllegalArgumentException("there is no file system path resource provided")
                 PseudonymisationRulesSettings.FromEnum.CLASSPATH -> ClassPathResource(
-                    rulesSettings.location ?: "static/rules.yml"
+                    rulesSettings.location ?: "deid/rules.yml"
                 )
             }.also {
                 if (!it.exists()) {

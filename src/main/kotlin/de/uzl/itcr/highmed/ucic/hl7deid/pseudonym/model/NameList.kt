@@ -23,7 +23,7 @@ data class NameList(
     )
 
     companion object {
-        private val resourceFile = ClassPathResource("static/names.yml")
+        private val resourceFile = ClassPathResource("deid/names.yml")
         private val objectMapper = ObjectMapper(YAMLFactory()).apply {
             this.registerKotlinModule()
         }
