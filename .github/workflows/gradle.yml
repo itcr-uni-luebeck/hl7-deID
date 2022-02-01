@@ -30,7 +30,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: "ci-${{ env.GITHUB_RUN_ID}}"
+        tag_name: "ci-$GITHUB_RUN_ID"
         generate_release_notes: true
         prerelease: true
         files: build/libs/hl7-deid.jar
