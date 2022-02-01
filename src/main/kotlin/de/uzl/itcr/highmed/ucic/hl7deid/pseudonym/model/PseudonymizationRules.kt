@@ -15,11 +15,11 @@ import org.springframework.core.io.Resource
 import java.io.FileNotFoundException
 
 data class PseudonymizationRules(
-    @JsonProperty("terser-paths-to-remove") val terserPathsToRemove: List<TerserRule>?,
-    @JsonProperty("terser-paths-to-offset-date-time") val terserPathsToOffsetDateTime: List<TerserRule>?,
-    @JsonProperty("terser-paths-to-replace-id") val terserPathsToReplaceId: List<TerserRule>?,
-    @JsonProperty("normalized-tersers") val normalizedTersers: List<NormalizedTerser>?,
-    @JsonProperty("terser-prefixes") val terserPrefixes: List<TerserPrefix>?
+    @JsonProperty("terser-paths-to-remove") val terserPathsToRemove: List<TerserRule>,
+    @JsonProperty("terser-paths-to-offset-date-time") val terserPathsToOffsetDateTime: List<TerserRule>,
+    @JsonProperty("terser-paths-to-replace-id") val terserPathsToReplaceId: List<TerserRule>,
+    @JsonProperty("normalized-tersers") val normalizedTersers: List<NormalizedTerser>,
+    @JsonProperty("terser-prefixes") val terserPrefixes: List<TerserPrefix>
 ) {
     data class TerserRule(
         val terser: String,
@@ -37,6 +37,8 @@ data class PseudonymizationRules(
         val segments: List<String>,
         val value: String
     )
+
+    val allRules: List<TerserRule> get() = terserPathsToRemove.plus(terserPathsToOffsetDateTime).plus(terserPathsToReplaceId)
 
     companion object {
         private val objectMapper = ObjectMapper(YAMLFactory()).apply {

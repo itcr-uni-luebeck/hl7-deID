@@ -1,7 +1,5 @@
 package de.uzl.itcr.highmed.ucic.hl7deid.batch
 
-import de.uzl.itcr.highmed.ucic.hl7deid.batch.DirWatcher
-import de.uzl.itcr.highmed.ucic.hl7deid.batch.PseudoProcessor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.batch.core.Job
@@ -54,9 +52,9 @@ data class DirectoryWatcherProperties(
     val inputDir: String,
     val moveToDir: String,
     val outputDir: String,
+    val changeFilenameToMsgId: Boolean
 ) {
     val inputPath: File get() = Path.of(inputDir).toFile()
     val moveToPath: File get() = Path.of(moveToDir).toFile()
     val outputPath: File get() = Path.of(outputDir).toFile()
-    val changeFilenameToMsgId: Boolean get() = true
 }

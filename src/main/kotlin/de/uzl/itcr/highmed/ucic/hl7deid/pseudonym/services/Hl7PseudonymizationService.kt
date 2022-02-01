@@ -15,9 +15,6 @@ import de.uzl.itcr.highmed.ucic.hl7deid.messageindex.Hl7MessageIndexer
 import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.model.PseudonymizationRules
 import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientIdentity
 import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.repo.PatientPseudonym
-import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.MessageIdService
-import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PatientIdentityService
-import de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services.PseudonymIdService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -106,6 +103,15 @@ class Hl7PseudoymizationService(
         }
     }
 
+    fun resolveTerserPath(terserRule: PseudonymizationRules.TerserRule, msgType: String): PseudonymizationRules.TerserRule {
+        val prefixes = pseudonymizationRules.terserPrefixes.filter { it.msgType == msgType }
+        val ruleSegment = terserRule.terser.substring(0, 3) // segment names are always 3 chars
+        return when (val applicable = prefixes.find { ruleSegment in it.segments }) {
+            null -> terserRule
+            else -> PseudonymizationRules.TerserRule("${applicable.value}${terserRule.terser}", terserRule.desc)
+        }
+    }
+
     private fun processOruR01Message(message: ORU_R01): ORU_R01 {
         val terser = Terser(message)
         return genericProcessMessage("ORU", message, terser, "PATIENT_RESULT/.PID")
@@ -163,21 +169,14 @@ class Hl7PseudoymizationService(
         }
 
         fun applyOperationToTerserRules(
-            rules: List<PseudonymizationRules.TerserRule>?,
+            rules: List<PseudonymizationRules.TerserRule>,
             logOperation: String,
             body: (value: String, description: String, terserPath: String) -> String?
         ) = run {
-            val prefixes = pseudonymizationRules.terserPrefixes?.filter { it.msgType == messageType }
-            val prefixedRules = rules?.map { terserRule ->
-                val ruleSegment = terserRule.terser.substring(0, 3) //segment names are always three chars
-                when (val applicable = prefixes?.find { ruleSegment in it.segments }) {
-                    null -> terserRule
-                    else -> PseudonymizationRules.TerserRule(
-                        "${applicable.value}${terserRule.terser}", terserRule.desc
-                    )
-                }
+            val prefixedRules = rules.map { terserRule ->
+                resolveTerserPath(terserRule, messageType)
             }
-            prefixedRules?.forEach { rule ->
+            prefixedRules.forEach { rule ->
                 replaceTerserValue(rule.terser, logOperation, rule.desc) { value, _ ->
                     body(value, rule.desc, rule.terser)
                 }

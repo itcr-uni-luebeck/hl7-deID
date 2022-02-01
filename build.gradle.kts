@@ -37,6 +37,7 @@ dependencies {
     implementation("ca.uhn.hapi:hapi-structures-v25:$hapiVersion")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
     runtimeOnly("com.h2database:h2")
+    testImplementation("org.assertj:assertj-core:3.22.0")
     //runtimeOnly("org.hsqldb:hsqldb")
 }
 
