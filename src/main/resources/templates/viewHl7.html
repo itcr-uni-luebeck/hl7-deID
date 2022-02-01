@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View HL7</title>
+    <script src="/js/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/codemirror.min.js" type="text/javascript"></script>
+    <script src="/js/cm-xml.js" type="text/javascript"></script>
+    <link rel="stylesheet" media="all" href="/css/codemirror.css">
+    <script src="/js/searchcursor.min.js" type="text/javascript"></script>
+    <script src="/js/mergely.js" type="text/javascript"></script>
+    <link rel="stylesheet" media="all" href="/css/pure-min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" media="all" href="/css/mergely.css">
+    <link rel="stylesheet" media="all" href="/css/custom.css">
+    <style>
+
+    </style>
+    <script type="text/javascript" th:inline="javascript">
+        function terserAjax() {
+            let pseudo = $('#terser-pseudo').is(":checked");
+            let msg = `[(${xml})]`;
+            if (pseudo) {
+                msg = `[(${pseudo})]`;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/api/terser",
+                data: {
+                    msg: msg,
+                    terser: $("input[name=terser]").val()
+                },
+                success: function (data) {
+                    $("code[id=terser-result]").text(data.result)
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#mergely').mergely({
+                cmsettings: {
+                    mode: 'xml',
+                    //readOnly: true
+                },
+                license: 'gpl-separate-notice',
+                lhs: function (setValue) {
+                    setValue(`
+[(${xml})]`);
+                },
+                rhs: function (setValue) {
+                    setValue(`
+[(${pseudo})]`);
+                }
+            });
+
+            $('#terser').on("input", terserAjax);
+
+            CodeMirror.fromTextArea(document.getElementById("cm-xml"), {
+                mode: 'xml',
+                readOnly: true
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g">
+    <div class="pure-u-1">
+        <div class="pure-u-1">
+            <h2>Comparison: Original XML (lhs) vs pseudonymized (rhs)</h2>
+        </div>
+        <div class="pure-u-1" style="height: 500px; margin-bottom: 1%">
+            <div id="mergely">
+            </div>
+        </div>
+    </div>
+
+    <div class="pure-u-1">
+        <a class="pure-button pure-button-primary" href="/">Go back&hellip;</a>
+    </div>
+
+    <div id="Terser" class="pure-u-1">
+        <h2>Terser Evaluation</h2>
+        <div class="pure-u-1">
+            <table>
+                <tr>
+                    <td><label>Terser path
+                        <input type="text" name="terser" id="terser">
+                    </label></td>
+                    <td><label>Pseudonymized?</label>
+                        <input type="checkbox" name="terser-pseudo" id="terser-pseudo" class="pure-checkbox"
+                               value="false" onchange="terserAjax()">
+                    </td>
+                    <td>
+                        <button class="pure-button" onclick="terserAjax()">Evaluate</button>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <div class="pure-u-1">
+            <pre><code id="terser-result" class="nohighlight">no terser yet</code></pre>
+        </div>
+    </div>
+    <div id="pipehat" class="pure-u-1">
+        <h2>Raw Message</h2>
+        <pre><code class="nohighlight" th:text="${pipe}">PIPE</code></pre>
+    </div>
+
+    <div id="indexed" class="pure-u-1">
+        <h2>Indexed</h2>
+        <pre><code class="nohighlight" th:text="${indexed}">INDEXED</code></pre>
+    </div>
+
+    <div id="structure" class="pure-u-1">
+        <h2>Structure</h2>
+        <pre><code class="nohighlight" th:text="${structure}">STRUCTURE</code></pre>
+    </div>
+
+    <div id="xml" class="pure-u-1">
+        <h2>XML</h2>
+        <textarea id="cm-xml" th:text="${xml}">XML</textarea>
+    </div>
+</div>
+
+</body>
+</html>

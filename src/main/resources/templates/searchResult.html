@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--suppress HtmlUnknownTarget -->
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload HL7</title>
+    <link rel="stylesheet" media="all" href="/css/pure-min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" media="all" href="/css/custom.css">
+</head>
+<body>
+<div class="pure-g">
+    <div class="pure-u-1">
+        <h1>Search</h1>
+    </div>
+    <div class="pure-u-1">
+        <div class="pure-u-1">
+            <h2>Search Parameters</h2>
+        </div>
+        <div class="pure-u-1">
+            <table class="pure-table search-params">
+                <thead>
+                <tr>
+                    <td th:each="k : ${searchParams.keySet()}" th:text="${k}">KEY</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:each="v : ${searchParams.values()}" th:text="${v}">VALUE</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pure-u-1">
+        <a class="pure-button pure-button-primary" href="/">Go back&hellip;</a>
+    </div>
+    <div class="pure-u-1">
+        <div class="pure-u-1">
+            <h2><span th:text="${result.size()}">NUM RESULTS</span> Results</h2>
+        </div>
+        <div class="pure-u-1">
+            <table class="pure-table search-result" th:if="${hasResult}">
+                <thead>
+                <tr>
+                    <td th:each="k : ${result[0].keySet()}" th:text="${k}">KEY</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="r : ${result}">
+                    <td th:each="v : ${r.values()}" th:text="${v}">VALUE</td>
+                </tr>
+                </tbody>
+            </table>
+            <p th:unless="${hasResult}">No results.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

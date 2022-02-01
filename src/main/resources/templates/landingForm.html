@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload HL7</title>
+    <link rel="stylesheet" media="all" href="/css/pure-min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" media="all" href="/css/custom.css">
+</head>
+<body>
+
+<div class="pure-g">
+    <div class="pure-u-1">
+        <h2>File Upload</h2>
+        <form method="POST" enctype="multipart/form-data" action="/upload" class="pure-form">
+            <input type="file" name="file">
+            <input type="submit" value="Upload" class="pure-button pure-button-primary">
+        </form>
+    </div>
+    <div class="pure-u-1">
+        <h2>Text Upload</h2>
+        <form method="POST" enctype="multipart/form-data" action="/text" class="pure-form-stacked">
+            <textarea name="data"></textarea>
+            <input type="submit" value="Submit" class="pure-button pure-button-primary">
+        </form>
+    </div>
+    <div class="pure-u-1">
+        <h2>Database Search (<span th:text="${numMsg}">NUM MSG</span> messages indexed)</h2>
+        <form method="POST" enctype="application/x-www-form-urlencoded" action="/search"
+              class="pure-form pure-form-aligned">
+            <fieldset>
+                <div class="pure-control-group">
+                    <label for="msgType">Message Type</label>
+                    <select name="msgType" id="msgType">
+                        <option></option>
+                        <option th:each="msgType: ${msgTypes}" th:text="${msgType}"/>
+                    </select>
+                </div>
+                <div class="pure-control-group">
+                    <label for="msgTrigger">Message Trigger</label>
+                    <select name="msgTrigger" id="msgTrigger">
+                        <option></option>
+                        <option th:each="trigger: ${triggerEvents}" th:text="${trigger}"/>
+                    </select>
+                </div>
+                <div class="pure-control-group">
+                    <label for="msgStructure">Message Structure</label>
+                    <select name="msgStructure" id="msgStructure">
+                        <option></option>
+                        <option th:each="struct: ${msgStructures}" th:text="${struct}"/>
+                    </select>
+                </div>
+                <div class="pure-control-group">
+                    <label for="msgControlId">MSG control ID</label>
+                    <input type="text" id="msgControlId" name="msgControlId">
+                </div>
+                <div class="pure-control-group">
+                    <label for="pid">PID</label>
+                    <input type="text" id="pid" name="pid">
+                </div>
+                <div class="pure-control-group">
+                    <label for="caseId">Case#</label>
+                    <input type="text" id="caseId" name="caseId">
+                </div>
+                <div class="pure-controls">
+                    <button type="submit" class="pure-button pure-button-primary">Search</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+</body>

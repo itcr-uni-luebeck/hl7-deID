@@ -1,0 +1,36 @@
+server:
+  port: 8001
+
+hl7pseudo:
+  rules:
+    from: CLASSPATH
+  dirwatcher:
+    pseudo:
+      input-dir: /home/joshua/hl7-pseudo/in
+      move-to-dir: /home/joshua/hl7-pseudo/processed
+      output-dir: /home/joshua/hl7-pseudo/out
+      change-filename-to-msg-id: true
+    index:
+      directory: /home/joshua/hl7-pseudo/index
+
+spring:
+  profiles:
+    active:
+      - pseudofilewatcher
+      - indexfiledirectorywatcher
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+  datasource:
+    url: jdbc:h2:./hl7analysisdb;AUTO_SERVER=true
+    #url: jdbc:hsqldb:file:db/hl7analysisdb
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    org: INFO
+    de: INFO
