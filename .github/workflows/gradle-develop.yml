@@ -34,5 +34,5 @@ jobs:
         generate_release_notes: true
         prerelease: true #false to allow linking to /latest
         files: build/libs/hl7-deid.jar
-        commitish: develop
+        target_commitish: develop
         
