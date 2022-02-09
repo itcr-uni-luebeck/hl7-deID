@@ -70,7 +70,7 @@ data class PseudonymizationRules(
 }
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "hl7pseudo.rules")
+@ConfigurationProperties(prefix = "hl7deid.rules")
 data class PseudonymisationRulesSettings(
     val from: FromEnum = FromEnum.CLASSPATH,
     val location: String? = null

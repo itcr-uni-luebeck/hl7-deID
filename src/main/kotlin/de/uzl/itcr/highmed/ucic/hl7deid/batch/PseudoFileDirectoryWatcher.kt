@@ -47,7 +47,7 @@ class PseudoFileDirectoryWatcher(
 }
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "hl7pseudo.dirwatcher.pseudo")
+@ConfigurationProperties(prefix = "hl7deid.dirwatcher.pseudo")
 data class DirectoryWatcherProperties(
     val inputDir: String,
     val moveToDir: String,
