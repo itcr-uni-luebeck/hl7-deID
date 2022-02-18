@@ -19,7 +19,8 @@ data class PseudonymizationRules(
     @JsonProperty("terser-paths-to-offset-date-time") val terserPathsToOffsetDateTime: List<TerserRule>,
     @JsonProperty("terser-paths-to-replace-id") val terserPathsToReplaceId: List<TerserRule>,
     @JsonProperty("normalized-tersers") val normalizedTersers: List<NormalizedTerser>,
-    @JsonProperty("terser-prefixes") val terserPrefixes: List<TerserPrefix>
+    @JsonProperty("terser-prefixes") val terserPrefixes: List<TerserPrefix>,
+    @JsonProperty("repetitions") val terserRepetitions: List<TerserRepetition>?
 ) {
     data class TerserRule(
         val terser: String,
@@ -35,7 +36,12 @@ data class PseudonymizationRules(
     data class TerserPrefix(
         @JsonProperty("msg-type") val msgType: String,
         val segments: List<String>,
-        val value: String
+        val value: String,
+    )
+
+    data class TerserRepetition(
+        @JsonProperty("msg-type") val msgType: String,
+        val repetitions: List<String>
     )
 
     val allRules: List<TerserRule> get() = terserPathsToRemove.plus(terserPathsToOffsetDateTime).plus(terserPathsToReplaceId)
