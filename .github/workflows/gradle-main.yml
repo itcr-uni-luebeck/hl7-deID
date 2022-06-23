@@ -1,0 +1,37 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Java CI [main]
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Gradle bootjar
+        uses: gradle/gradle-build-action@bc3340afc5e3cc44f2321809ac090d731c13c514
+        with:
+          arguments: bootJar
+      - name: Set ENV tagname
+        run: echo "TAGNAME=main-${GITHUB_RUN_NUMBER}" | tee -a $GITHUB_ENV
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAGNAME }}
+          generate_release_notes: true
+          #prerelease: true #false to allow linking to /latest
+          files: build/libs/hl7-deid.jar
+

@@ -103,17 +103,63 @@ class Hl7PseudoymizationService(
         }
     }
 
-    fun resolveTerserPath(terserRule: PseudonymizationRules.TerserRule, msgType: String): PseudonymizationRules.TerserRule {
+    fun resolveTerserPath(
+        terserRule: PseudonymizationRules.TerserRule,
+        msgType: String,
+        terser: Terser
+    ): List<PseudonymizationRules.TerserRule> {
         val prefixes = pseudonymizationRules.terserPrefixes.filter { it.msgType == msgType }
         val ruleSegment = terserRule.terser.substring(0, 3) // segment names are always 3 chars
-        return when (val applicable = prefixes.find { ruleSegment in it.segments }) {
+        val modifiedRule = when (val applicable = prefixes.find { ruleSegment in it.segments }) {
             null -> terserRule
             else -> PseudonymizationRules.TerserRule("${applicable.value}${terserRule.terser}", terserRule.desc)
         }
+        return applyRepetitions(modifiedRule, msgType, terser)
+    }
+
+    private fun applyRepetitions(
+        terserRule: PseudonymizationRules.TerserRule,
+        msgType: String,
+        terser: Terser
+    ): List<PseudonymizationRules.TerserRule> {
+        val repetitionRules = pseudonymizationRules.terserRepetitions?.find { it.msgType == msgType }
+            ?: return listOf(terserRule)
+        val applicableRules = repetitionRules.repetitions.filter { it in terserRule.terser }
+        return when {
+            applicableRules.isEmpty() -> listOf(terserRule)
+            else -> computeRepetitions(applicableRules, terserRule, terser)
+        }
+    }
+
+    private fun computeRepetitions(
+        applicableRules: List<String>,
+        terserRule: PseudonymizationRules.TerserRule,
+        terser: Terser
+    ): List<PseudonymizationRules.TerserRule> {
+        val returnRules = mutableListOf<PseudonymizationRules.TerserRule>()
+        for (appliedRule in applicableRules) {
+            var repetition = 0
+            var hasThisRepetition = true
+            val suffix = terserRule.terser.substringAfter(appliedRule)
+            while (hasThisRepetition) {
+                val repeatedTerser = "$appliedRule($repetition)$suffix"
+                hasThisRepetition = try {
+                    val value = terser.get(repeatedTerser)
+                    // TODO: 18.02.2022 does not work
+                    returnRules.add(PseudonymizationRules.TerserRule(repeatedTerser, terserRule.desc))
+                    true
+                } catch (_: Exception) {
+                    false
+                }
+                repetition++
+            }
+        }
+        return returnRules
     }
 
     private fun processOruR01Message(message: ORU_R01): ORU_R01 {
         val terser = Terser(message)
+        //log.info(message.printStructure())
         return genericProcessMessage("ORU", message, terser, "PATIENT_RESULT/.PID")
     }
 
@@ -171,27 +217,31 @@ class Hl7PseudoymizationService(
         fun applyOperationToTerserRules(
             rules: List<PseudonymizationRules.TerserRule>,
             logOperation: String,
+            terser: Terser,
             body: (value: String, description: String, terserPath: String) -> String?
         ) = run {
             val prefixedRules = rules.map { terserRule ->
-                resolveTerserPath(terserRule, messageType)
+                resolveTerserPath(terserRule, messageType, terser)
             }
-            prefixedRules.forEach { rule ->
-                replaceTerserValue(rule.terser, logOperation, rule.desc) { value, _ ->
-                    body(value, rule.desc, rule.terser)
+            prefixedRules.forEach { rules ->
+                rules.forEach { rule ->
+                    replaceTerserValue(rule.terser, logOperation, rule.desc) { value, _ ->
+                        body(value, rule.desc, rule.terser)
+                    }
                 }
             }
         }
 
 
-        applyOperationToTerserRules(pseudonymizationRules.terserPathsToRemove, "Removed")
+        applyOperationToTerserRules(pseudonymizationRules.terserPathsToRemove, "Removed", terser)
         { _, description, _ ->
             "**REMOVED** ($description)"
         }
 
         applyOperationToTerserRules(
             pseudonymizationRules.terserPathsToOffsetDateTime,
-            "Applied D/T offset to"
+            "Applied D/T offset to",
+            terser
         )
         { value, _, _ ->
             val dtFormatter = getFormatterStringDt(value) ?: return@applyOperationToTerserRules null
@@ -202,7 +252,8 @@ class Hl7PseudoymizationService(
 
         applyOperationToTerserRules(
             pseudonymizationRules.terserPathsToReplaceId,
-            "Replaced ID"
+            "Replaced ID",
+            terser
         )
         { value, _, terserPath ->
             pseudonymIdService.getPseudonymIdForTerser(terserPath, value)?.replacedValue.toString()

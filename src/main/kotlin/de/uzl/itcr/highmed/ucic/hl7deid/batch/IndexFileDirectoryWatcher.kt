@@ -37,7 +37,7 @@ class IndexFileDirectoryWatcher(
 }
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "hl7pseudo.dirwatcher.index")
+@ConfigurationProperties(prefix = "hl7deid.dirwatcher.index")
 class IndexFileDirectoryWatcherProperties(
     directory: String,
     val directoryFile: File = Path.of(directory).toFile()

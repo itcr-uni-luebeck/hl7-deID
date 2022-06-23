@@ -5,13 +5,11 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: Java CI [develop]
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -28,12 +26,13 @@ jobs:
       with:
         arguments: bootJar
     - name: Set ENV tagname
-      run: echo "TAGNAME=ci-${GITHUB_RUN_NUMBER}" | tee -a $GITHUB_ENV
+      run: echo "TAGNAME=ci-develop-${GITHUB_RUN_NUMBER}" | tee -a $GITHUB_ENV
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ env.TAGNAME }}
         generate_release_notes: true
-        #prerelease: true #false to allow linking to /latest
+        prerelease: true #false to allow linking to /latest
         files: build/libs/hl7-deid.jar
+        target_commitish: develop
         
