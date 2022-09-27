@@ -3,6 +3,7 @@ package de.uzl.itcr.highmed.ucic.hl7deid.pseudonym.services
 import ca.uhn.hl7v2.DefaultHapiContext
 import ca.uhn.hl7v2.HL7Exception
 import ca.uhn.hl7v2.HapiContext
+import ca.uhn.hl7v2.model.AbstractMessage
 import ca.uhn.hl7v2.model.Message
 import ca.uhn.hl7v2.model.v25.datatype.DTM
 import ca.uhn.hl7v2.model.v25.message.ADT_AXX
@@ -73,7 +74,12 @@ class Hl7PseudoymizationService(
         return genericProcessMessage("ADT", parsedMessage, terser, pidTerser)
     }
 
-    private fun <T> genericProcessMessage(messageType: String, parsedMessage: T, terser: Terser, pidTerser: String): T {
+    private fun <T : AbstractMessage> genericProcessMessage(
+        messageType: String,
+        parsedMessage: T,
+        terser: Terser,
+        pidTerser: String
+    ): T {
         val pidSegment = terser.getSegment(pidTerser) as PID
         val patient = extractPatientIdentity(pidSegment)
         val patientPseudonym = patientIdentityService.getOrGeneratePseudonym(patient)
@@ -84,7 +90,7 @@ class Hl7PseudoymizationService(
         return parsedMessage
     }
 
-    private fun processMessage(message: Message): Message {
+    private fun processMessage(message: AbstractMessage): Message {
         val terser = Terser(message)
         applyMshControlId(terser)
         return when (val msgType = terser.get("MSH-9-1")) {
@@ -103,10 +109,11 @@ class Hl7PseudoymizationService(
         }
     }
 
-    fun resolveTerserPath(
+    fun <T : AbstractMessage> resolveTerserPath(
         terserRule: PseudonymizationRules.TerserRule,
         msgType: String,
-        terser: Terser
+        terser: Terser,
+        message: T
     ): List<PseudonymizationRules.TerserRule> {
         val prefixes = pseudonymizationRules.terserPrefixes.filter { it.msgType == msgType }
         val ruleSegment = terserRule.terser.substring(0, 3) // segment names are always 3 chars
@@ -114,17 +121,18 @@ class Hl7PseudoymizationService(
             null -> terserRule
             else -> PseudonymizationRules.TerserRule("${applicable.value}${terserRule.terser}", terserRule.desc)
         }
-        return applyRepetitions(modifiedRule, msgType, terser)
+        return applyRepetitions(modifiedRule, msgType, terser, message)
     }
 
-    private fun applyRepetitions(
+    private fun <T : AbstractMessage> applyRepetitions(
         terserRule: PseudonymizationRules.TerserRule,
         msgType: String,
-        terser: Terser
+        terser: Terser,
+        message: T,
     ): List<PseudonymizationRules.TerserRule> {
         val repetitionRules = pseudonymizationRules.terserRepetitions?.find { it.msgType == msgType }
             ?: return listOf(terserRule)
-        val applicableRules = repetitionRules.repetitions.filter { it in terserRule.terser }
+        val applicableRules = repetitionRules.repetitions.filter { it.replace("*", "") in terserRule.terser }
         return when {
             applicableRules.isEmpty() -> listOf(terserRule)
             else -> computeRepetitions(applicableRules, terserRule, terser)
@@ -138,21 +146,54 @@ class Hl7PseudoymizationService(
     ): List<PseudonymizationRules.TerserRule> {
         val returnRules = mutableListOf<PseudonymizationRules.TerserRule>()
         for (appliedRule in applicableRules) {
-            var repetition = 0
-            var hasThisRepetition = true
-            val suffix = terserRule.terser.substringAfter(appliedRule)
-            while (hasThisRepetition) {
-                val repeatedTerser = "$appliedRule($repetition)$suffix"
-                hasThisRepetition = try {
-                    val value = terser.get(repeatedTerser)
-                    // TODO: 18.02.2022 does not work
-                    returnRules.add(PseudonymizationRules.TerserRule(repeatedTerser, terserRule.desc))
-                    true
-                } catch (_: Exception) {
-                    false
+            val splitRule = appliedRule.trimStart('/').split('/').map {
+                it to when (it.endsWith('*')) {
+                    true -> 0
+                    else -> -1
                 }
-                repetition++
+            }.toMutableList()
+
+            val buildTerserString: () -> String = {
+                buildString {
+                    splitRule.joinToString("/") {
+                        it.first.replace("*", "(${it.second})")
+                    }.let { append(it) }
+                    append("-")
+                    append(terserRule.terser.substringAfter("-"))
+                }
             }
+
+            for (i in splitRule.size - 1 downTo 0) {
+                var hasRepetition = true
+                while (hasRepetition) {
+                    hasRepetition = try {
+                        terser.get(buildTerserString())
+                        returnRules.add(PseudonymizationRules.TerserRule(buildTerserString(), terserRule.desc))
+                        splitRule[i] = splitRule[i].first to splitRule[i].second.inc()
+                        splitRule[i].first.contains("*")
+                    } catch (e: Exception) {
+                        log.warn(e.message)
+                        false
+                    }
+                }
+            }
+
+
+//            var repetition = 0
+//            var hasThisRepetition = true
+//            val suffix = terserRule.terser.substringAfter(appliedRule)
+//            while (hasThisRepetition) {
+//                val repeatedTerser = "$appliedRule($repetition)$suffix"
+//                hasThisRepetition = try {
+//                    terser.get(repeatedTerser)
+//                    // TODO: 18.02.2022 does not work
+//                    returnRules.add(PseudonymizationRules.TerserRule(repeatedTerser, terserRule.desc))
+//                    true
+//                } catch (_: Exception) {
+//                    false
+//                }
+//                repetition++
+//            }
         }
         return returnRules
     }
@@ -187,7 +228,7 @@ class Hl7PseudoymizationService(
         return DateTimeFormatter.ofPattern(formatterPattern)
     }
 
-    private fun <T> removeCompromisingElements(
+    private fun <T : AbstractMessage> removeCompromisingElements(
         message: T,
         messageType: String,
         terser: Terser,
@@ -218,10 +259,11 @@ class Hl7PseudoymizationService(
             rules: List<PseudonymizationRules.TerserRule>,
             logOperation: String,
             terser: Terser,
+            message: T,
             body: (value: String, description: String, terserPath: String) -> String?
         ) = run {
             val prefixedRules = rules.map { terserRule ->
-                resolveTerserPath(terserRule, messageType, terser)
+                resolveTerserPath(terserRule, messageType, terser, message)
             }
             prefixedRules.forEach { rules ->
                 rules.forEach { rule ->
@@ -233,7 +275,7 @@ class Hl7PseudoymizationService(
         }
 
 
-        applyOperationToTerserRules(pseudonymizationRules.terserPathsToRemove, "Removed", terser)
+        applyOperationToTerserRules(pseudonymizationRules.terserPathsToRemove, "Removed", terser, message)
         { _, description, _ ->
             "**REMOVED** ($description)"
         }
@@ -241,7 +283,8 @@ class Hl7PseudoymizationService(
         applyOperationToTerserRules(
             pseudonymizationRules.terserPathsToOffsetDateTime,
             "Applied D/T offset to",
-            terser
+            terser,
+            message
         )
         { value, _, _ ->
             val dtFormatter = getFormatterStringDt(value) ?: return@applyOperationToTerserRules null
@@ -253,7 +296,8 @@ class Hl7PseudoymizationService(
         applyOperationToTerserRules(
             pseudonymizationRules.terserPathsToReplaceId,
             "Replaced ID",
-            terser
+            terser,
+            message
         )
         { value, _, terserPath ->
             pseudonymIdService.getPseudonymIdForTerser(terserPath, value)?.replacedValue.toString()
@@ -269,7 +313,7 @@ class Hl7PseudoymizationService(
         } catch (e: HL7Exception) {
             de.uzl.itcr.highmed.ucic.hl7deid.log.warn(e.message)
         }
-        val parsedMessage = hapiContext.pipeParser.parse(cleanMessageString)
+        val parsedMessage = hapiContext.pipeParser.parse(cleanMessageString) as AbstractMessage
         return processMessage(parsedMessage)
     }
 
@@ -280,15 +324,37 @@ class Hl7PseudoymizationService(
     }
 
     @Suppress("unused")
-    fun processFromFileToFile(inputFileName: String, outputDirectory: String, changeFilenameToMsgId: Boolean) =
+    fun processFromFileToFile(
+        inputFileName: String,
+        outputDirectory: String,
+        changeFilenameToMsgId: Boolean,
+        includeTriggerEvent: Boolean
+    ) =
         processMessageByFilename(inputFileName).let { processed ->
             val encoded = hapiContext.pipeParser.encode(processed)
-            val outputFilename = Path.of(outputDirectory).resolve(
-                when (changeFilenameToMsgId) {
-                    true -> Path.of(outputDirectory).resolve("${Terser(processed).get("MSH-10")}.hl7")
-                    else -> Path.of(inputFileName).fileName
+            val baseFilename = Path.of(inputFileName).fileName
+            val outputFilename = buildString {
+                val trigger = Terser(processed).get("MSH-9-2")
+                val msgId = Terser(processed).get("MSH-10")
+                when {
+                    changeFilenameToMsgId && includeTriggerEvent -> append("$msgId-$trigger")
+                    changeFilenameToMsgId -> append(msgId)
+                    includeTriggerEvent -> {
+                        append(baseFilename)
+                        append("-$trigger")
+                    }
+                    else -> append(baseFilename)
                 }
-            )
+                append(".hl7")
+            }.let {
+                Path.of(outputDirectory).resolve(it)
+            }
+//            val outputFilename = Path.of(outputDirectory).resolve(
+//                when (changeFilenameToMsgId) {
+//                    true -> Path.of(outputDirectory).resolve("${Terser(processed).get("MSH-10")}.hl7")
+//                    else -> baseFilename
+//                }
+//            )
             val file = outputFilename.toFile()
             file.createNewFile()
             file.writeText(
@@ -300,11 +366,11 @@ class Hl7PseudoymizationService(
 
     private fun applyPseudonymPid(pidSegment: PID, patientPseudonym: PatientPseudonym) {
         pidSegment.dateTimeOfBirth?.let { dob ->
-            patientPseudonym.dateOfBirth?.let { pseudodob ->
+            patientPseudonym.dateOfBirth?.let { pseudoDob ->
                 dob.time?.setDatePrecision(
-                    pseudodob.year,
-                    pseudodob.monthValue,
-                    pseudodob.dayOfMonth
+                    pseudoDob.year,
+                    pseudoDob.monthValue,
+                    pseudoDob.dayOfMonth
                 )
             }
             pidSegment.patientName.firstOrNull()?.let {

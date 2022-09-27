@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Path
+import java.util.UUID
 import javax.annotation.PostConstruct
 
 @Service
@@ -42,17 +43,27 @@ class PseudoFileDirectoryWatcher(
             PseudoProcessor.CHANGEFILENAMEPARAM,
             watcherProperties.changeFilenameToMsgId.toString()
         )
+        .addString(
+            PseudoProcessor.INCLUDETRIGGERPARAM,
+            watcherProperties.includeTriggerEvent.toString()
+        ).apply {
+            if  (watcherProperties.useNonce) addString("nonce", UUID.randomUUID().toString())
+            //the nonce ensures that filenames that have already been processed can be processed again
+        }
         .toJobParameters()
 
 }
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "hl7deid.dirwatcher.pseudo")
+@Profile("pseudofilewatcher")
 data class DirectoryWatcherProperties(
     val inputDir: String,
     val moveToDir: String,
     val outputDir: String,
-    val changeFilenameToMsgId: Boolean
+    val changeFilenameToMsgId: Boolean = true,
+    val includeTriggerEvent: Boolean = true,
+    val useNonce: Boolean = true
 ) {
     val inputPath: File get() = Path.of(inputDir).toFile()
     val moveToPath: File get() = Path.of(moveToDir).toFile()

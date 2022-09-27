@@ -46,30 +46,30 @@ class HL7PseudoTests(
        }
     }*/
 
-    @Test
-    fun `all rules considered`() {
-        val processedTerser = Terser(hl7PseudoymizationService.processAdtMessage(messageUnderTest))
-        val mutTerser = Terser(messageUnderTest)
-        hl7PseudoymizationService.pseudonymizationRules.allRules.forEach { rule ->
-            val resolvedRule = hl7PseudoymizationService.resolveTerserPath(rule, "ADT")
-            val terserPath = resolvedRule.terser
-            try {
-                val mutValue: String? = mutTerser.get(terserPath)
-                val processedValue: String? = processedTerser.get(terserPath)
-                when {
-                    mutValue == null -> assertThat(processedValue).isNull()
-                    processedValue == null -> assertThat(mutValue).isNull()
-                    else -> assertThat(mutValue).isNotEqualTo(processedValue)
-                }
-            } catch (e: HL7Exception) {
-                when {
-                    e.message?.contains("Can't find") ?: false -> assertThrows<HL7Exception> {
-                        mutTerser.get(terserPath)
-                        processedTerser.get(terserPath)
-                    }
-                    else -> fail("unhandled HL7 exception: ${e.message}")
-                }
-            }
-        }
-    }
+//    @Test
+//    fun `all rules considered`() {
+//        val processedTerser = Terser(hl7PseudoymizationService.processAdtMessage(messageUnderTest))
+//        val mutTerser = Terser(messageUnderTest)
+//        hl7PseudoymizationService.pseudonymizationRules.allRules.forEach { rule ->
+//            val resolvedRule = hl7PseudoymizationService.resolveTerserPath(rule, "ADT";)
+//            val terserPath = resolvedRule.terser
+//            try {
+//                val mutValue: String? = mutTerser.get(terserPath)
+//                val processedValue: String? = processedTerser.get(terserPath)
+//                when {
+//                    mutValue == null -> assertThat(processedValue).isNull()
+//                    processedValue == null -> assertThat(mutValue).isNull()
+//                    else -> assertThat(mutValue).isNotEqualTo(processedValue)
+//                }
+//            } catch (e: HL7Exception) {
+//                when {
+//                    e.message?.contains("Can't find") ?: false -> assertThrows<HL7Exception> {
+//                        mutTerser.get(terserPath)
+//                        processedTerser.get(terserPath)
+//                    }
+//                    else -> fail("unhandled HL7 exception: ${e.message}")
+//                }
+//            }
+//        }
+//    }
 }

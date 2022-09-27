@@ -70,11 +70,12 @@ class PseudoProcessor(
     fun pseudoTasklet(
         @Value("#{jobParameters['input.file']}") inputFileName: String? = null,
         @Value("#{jobParameters['output.directory']}") outputFileName: String? = null,
-        @Value("#{jobParameters['changeFilenameToMsgId']}") changeFilenameToMsgId: String? = null
-    ) = MethodInvokingTaskletAdapter().apply {
+        @Value("#{jobParameters['changeFilenameToMsgId']}") changeFilenameToMsgId: String? = null,
+        @Value("#{jobParameters['includeTriggerEvent']}") includeTriggerEvent: String? = null,
+        ) = MethodInvokingTaskletAdapter().apply {
         setTargetObject(pseudoymizationService)
         setTargetMethod("processFromFileToFile")
-        setArguments(arrayOf(inputFileName, outputFileName, changeFilenameToMsgId.toBoolean()))
+        setArguments(arrayOf(inputFileName, outputFileName, changeFilenameToMsgId.toBoolean(), includeTriggerEvent.toBoolean()))
     }
 
     companion object {
@@ -82,6 +83,7 @@ class PseudoProcessor(
         const val OUTPUTPARAM = "output.directory"
         const val MOVETOPARAM = "moveto.directory"
         const val CHANGEFILENAMEPARAM = "changeFilenameToMsgId"
+        const val INCLUDETRIGGERPARAM = "includeTriggerEvent"
     }
 }
 
